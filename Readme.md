@@ -16,11 +16,12 @@ You will get this:
 
 ## Structure Overview
 
-distributed_optuna_plus_wandb works as a hook inserted to the Trainer.
+distributed_optuna_plus_wandb provides a trainer. 
+The tuner is built based on the trainer.
 
 ### Trainer Design
 
-The following code shows the structure of ` run()` . 
+The following code shows the structure of `run()` . 
 
 ``` python
 def run(self):
@@ -55,15 +56,15 @@ distributed_optuner_plus_wandb mainly relies on ` OptunawandbHook`  and ` Optuna
 
 ` OptunawandbBase` is a controller to run the trainer.
 
-` OptunawandbHook` takes over logging, pruning, value reporting stuffs for each trials.
+` OptunawandbHook` takes over logging, pruning, value reporting stuffs for each trial.
 
 ## Usage
 
-You can run an example here to see how to tune params while training a CNN on MINIST using the distributed_optuner_plus_wandb.
+You can run an [example](https://github.com/ThisUserIsSuperCool/dist_optuna_plus_wandb/blob/master/src/main.py) here to see how to tune params while training a LSTM on MINIST using the distributed_optuner_plus_wandb.
 
 ### Step 1: Use the Trainer
 
-Run ` train.py` to solely enjoy the trainer. see explame here.
+Run ` train.py` to solely enjoy the trainer. see [example](https://github.com/ThisUserIsSuperCool/dist_optuna_plus_wandb/blob/master/src/trainer.py) here.
 
 ``` python
 class Trainer(BaseTrainer):
@@ -84,7 +85,7 @@ class Trainer(BaseTrainer):
         }
      def valid(self,):
       	...
-        self.valid_out{
+        self.valid_out = {
           "loss":loss,
         }
 
@@ -162,8 +163,8 @@ paramtuner = ParamTune(
 # Enqueue a trial with given parameter values.
 # fix the sampling parameters at the beginning of searching
 trial_param_list = [
-  dict(lr = 1e-2,hidden_size = 256,**paramtuner.get_other_cfg()),
-  dict(lr = 1e-2,hidden_size = 64,**paramtuner.get_other_cfg()),
+  dict(lr = 1e-2,hidden_size = 256),
+  dict(lr = 1e-2,hidden_size = 64),
 ]
 
 # start searching...
@@ -228,7 +229,7 @@ paramtuner.run(
 
 #### Define which metric to be optimized
 
-1. return the metrics that you want to optimized in trainer in `valid()` method. 
+1. save the metrics that you want to optimized to `self.valid_out` (which is a dict) in trainer in `valid()` method. 
 
    ``` python
    class Trainer(BaseTrainer):
@@ -236,7 +237,7 @@ paramtuner.run(
         def valid(self,):
         		metric_to_report = ...
          	...
-           self.valid_out{
+           self.valid_out = {
              "loss":loss,
              "metric_to_report": metric_to_report,
            }
