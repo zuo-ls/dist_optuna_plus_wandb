@@ -189,8 +189,8 @@ Define your ` trial_param_list` and pass it to the ` ParamTune` object, then `tr
 # fix the sampling parameters at the beginning of searching
 
 trial_param_list = [
-  dict(lr = 1e-2,hidden_size = 256,**paramtuner.get_other_cfg()), # the first set of params to run
-  dict(lr = 1e-2,hidden_size = 64,**paramtuner.get_other_cfg()), # the second set of params to run
+  dict(lr = 1e-2,hidden_size = 256,), # the first set of params to run
+  dict(lr = 1e-2,hidden_size = 64,), # the second set of params to run
 ]
 
 # start searching...
